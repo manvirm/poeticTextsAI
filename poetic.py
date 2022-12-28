@@ -7,9 +7,9 @@ from keras.models import Sequential
 # LSTM is long short term memory (reccurent layer, memory of model)
 # Dense layers for hidden layers
 # Activation for output layer
-from keras.models import LSTM, Dense, Activation
+from keras.layers import LSTM, Dense, Activation
 # RSM optimizer (compile model)
-from keras.models import RMSprep
+from keras.optimizers import RMSprop
 
 # Directly load data into script
 filepath = tf.keras.utils.get_file('shakespeare.txt', 'https://storage.googleapis.com/download.tensorflow.org/data/shakespeare.txt')
@@ -45,7 +45,21 @@ sentences = []
 next_characters = []
 
 for i in range(0, len(text) - SEQ_LEN, STEP_SIZE):
-
     # Need to include last value (i + SEQ_LEN)
     sentences.append(text[i: i + SEQ_LEN])
-    next_characters.append(text[i: i + SEQ_LEN])
+    next_characters.append(text[i + SEQ_LEN])
+
+# Need numerical format of training data
+# Numpy array full of zeros with length of amount of sentences
+# times sequence len times amount of characters
+
+# One dimension for all possible sentences
+# Another dimension for positions of sentences
+# Last dimension for all characters
+x = np.zeros((len(sentences), SEQ_LEN, len(characters)), dtype=np.bool_)
+y = np.zeros((len(sentences), len(characters)),dtype=np.bool_)
+
+
+
+
+
