@@ -35,3 +35,17 @@ char_to_index = dict((c, i) for i, c in enumerate(characters))
 # (i.e,) {1: 'a', 25: 'f'}
 index_to_char = dict((i, c) for i, c in enumerate(characters))
 
+# Amount of characters used to predict next one
+SEQ_LEN = 40
+# Amount of characters to shift to start the next sequence
+STEP_SIZE = 3
+
+# Create entry list of sentences and next char
+sentences = []
+next_characters = []
+
+for i in range(0, len(text) - SEQ_LEN, STEP_SIZE):
+
+    # Need to include last value (i + SEQ_LEN)
+    sentences.append(text[i: i + SEQ_LEN])
+    next_characters.append(text[i: i + SEQ_LEN])
