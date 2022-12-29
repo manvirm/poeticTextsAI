@@ -64,10 +64,10 @@ y = np.zeros((len(sentences), len(characters)),dtype=np.bool_)
 # True (1) if character is in sentence
 for i, sentence in enumerate(sentences):
     for t, character in enumerate(sentence):
-        x[i, t, char_to_index(character)] = 1
+        x[i, t, char_to_index[character]] = 1
     y[i, char_to_index[next_characters[i]]] = 1
 
-
+'''
 # Build Neural Network
 model = Sequential()
 # Store in memory
@@ -82,5 +82,19 @@ model.compile(loss='categorical_crossentropy', optimizer=RMSprop(lr=0.01))
 model.fit(x, y, batch_size=256, epochs=4)
 # No need to keep training over again
 model.save('textgenerator.model')
-# Can comment out above code after running and uncomment line below
-# model = tf.keras.models.load_model('textgenerator.model')
+'''
+model = tf.keras.models.load_model('textgenerator.model')
+
+# Take prediction of model and one character
+# Gets softmax result and will choice thats conservative or safe
+# Higher temp will be more conservative (more creative sentence)
+def sample(preds, temperature = 1.0):
+    preds = np.asarray(preds).astype('float64')
+    preds = np.log(preds) / temperature
+    exp_preds = np.exp(preds)
+    preds = exp_preds / np.sum(exp_preds)
+    probas = np.random.multinomial(1, preds, 1)
+    return np.orgnax(probas)
+
+def generate_text(length, temeprature):
+    start_index = random.randint(0, len(text) - SEQ_LEN)
