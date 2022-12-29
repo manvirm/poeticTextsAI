@@ -59,7 +59,28 @@ for i in range(0, len(text) - SEQ_LEN, STEP_SIZE):
 x = np.zeros((len(sentences), SEQ_LEN, len(characters)), dtype=np.bool_)
 y = np.zeros((len(sentences), len(characters)),dtype=np.bool_)
 
+# Fill arrays x and y
+# Go through every single character in sentence
+# True (1) if character is in sentence
+for i, sentence in enumerate(sentences):
+    for t, character in enumerate(sentence):
+        x[i, t, char_to_index(character)] = 1
+    y[i, char_to_index[next_characters[i]]] = 1
 
 
-
-
+# Build Neural Network
+model = Sequential()
+# Store in memory
+model.add(LSTM(128, input_shape = (SEQ_LEN, len(characters))))
+model.add(Dense(len(characters)))
+# Scales output so probabilities add to 1
+model.add(Activation('softmax'))
+# Loss function, learning rate 0.01
+model.compile(loss='categorical_crossentropy', optimizer=RMSprop(lr=0.01))
+# Fit model on training data, batch_size means how many examples we put in 
+# network at once
+model.fit(x, y, batch_size=256, epochs=4)
+# No need to keep training over again
+model.save('textgenerator.model')
+# Can comment out above code after running and uncomment line below
+# model = tf.keras.models.load_model('textgenerator.model')
