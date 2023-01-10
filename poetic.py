@@ -98,3 +98,30 @@ def sample(preds, temperature = 1.0):
 
 def generate_text(length, temeprature):
     start_index = random.randint(0, len(text) - SEQ_LEN)
+    generated = ''
+    sentence = text[start_index: start_index + SEQ_LEN]
+    generated += sentence
+    for i in range(length):
+        x = np.zeros((1, SEQ_LEN, len(characters)), dtype=np.bool_)
+        for t, character in enumerate(sentence):
+            x[0, t, char_to_index[character]] = 1
+
+        predications = model.predict(x, vprhose=0)[0]
+        next_index = sample(predications)
+        next_character = index_to_char[next_index]
+
+        generated += next_character
+        sentence = sentence[1:] + next_character
+    return generated
+
+#print results
+print("--------0.2------")
+print(generate_text(300, 0.2))
+print("--------0.4------")
+print(generate_text(300, 0.4))
+print("--------0.6------")
+print(generate_text(300, 0.6))
+print("--------0.9------")
+print(generate_text(300, 0.9))
+print("--------1.0------")
+print(generate_text(300, 1.0))
